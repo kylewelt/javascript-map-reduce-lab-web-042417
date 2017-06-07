@@ -9000,3 +9000,48 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+const issuesWithUpdatedApiUrl = issues.map(function (issue) {
+  return Object.assign({}, issue, {
+    url: issue['url'].replace(/api.github.com/, 'api-v2.github.com')
+  })
+})
+
+const commentCountAcrossIssues = issues.map(function (issue) {
+  return issue['comments_count']
+}).reduce(function (acc, val) {
+  return acc + val
+}, 0)
+
+const openIssues = issues.reduce(function (results, issue) {
+  if (issue['state'] === 'open') {
+    results.push(issue)
+  }
+  return results
+}, [])
+
+const nonAutomaticIssues = issues.reduce(function (results, issue) {
+  if (issue['body'] !== 'This pull request has been automatically created by learn.co.') {
+    results.push(issue)
+  }
+  return results
+}, [])
+
+const issuesRows = nonAutomaticIssues.map(function (issue) {
+  return `<tr><td>${issue['body']}</td>` +
+  `<td>${issue['created_at']}</td>` +
+  `<td>${issue['state']}</td></tr>`
+}).join('')
+
+let tBody = document.getElementById('results')
+tBody.innerHTML = issuesRows
+
+// {
+//   "body": "Instructions say GET /team and POST /newteam. Rspec wants GET/newteam and POST/team.",
+//   "created_at": "2016-03-31 16:23:13 UTC",
+//   "comments_count": 0,
+//   "id": 144948778,
+//   "number": 7,
+//   "state": "closed",
+//   "url": "https://api.github.com/repos/learn-co-curriculum/basic-sinatra-forms-lab/issues/7"
+// }
